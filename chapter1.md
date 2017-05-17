@@ -57,3 +57,78 @@ ex() %>% {
   }
 }
 ```
+
+
+--- type:NormalExercise lang:r xp:100 skills:1 key:d3837f8c96
+## Using separate R and C++ files 
+
+The typical way to write non-trivial Rcpp code is to have separate R (`.R`) and C++ (`.cpp`) files.  Here's an example C++ function taken from section 1.2.5 of [Seamless R and C++ Integration with Rcpp](https://www.springer.com/us/book/9781461468677).
+
+```{cpp}
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+int fibonacci(const int x) {
+  if(x < 2) {
+    return x;
+  }
+  else {
+    return(fibonacci(x - 1) + fibonacci(x - 2));
+  }
+}
+```
+
+Let's step through the code.
+
+- `#include <Rcpp.h>` gives the C++ file access to the functionality described in the `Rcpp.h` header file. This includes C++ equivalents of R objects. For example `NumericVector` is the Rcpp equivalent of R's `numeric` vector.
+- `using namespace Rcpp;` means that the code in this file can access the contents of the `Rcpp` namespace without explicitly mentioning it. For example, you can write `NumericVector` rather than `Rcpp::NumericVector`.
+- `// [[Rcpp::export]]` tells Rcpp that the function following it needs to be exported. That is, an R function that calls this C++ function must be created when this file is sourced.
+- `int fibonacci(const int x) { ... }` defines a C++ function that calculates Fibonacci numbers. 
+
+*** =instructions
+
+- Pass `"fibonacci.cpp"` to `sourceCpp()` to source the C++ code.
+- Run the R-level fibonacci function that is generated with 10 as an input.
+
+*** =hint
+
+- This exercise doesn't work yet, because there is nowhere to write the C++ code.
+
+*** =pre_exercise_code
+```{r}
+'___BLOCK_SOLUTION_EXEC___'
+library(Rcpp)
+```
+
+*** =sample_code
+```{r}
+# Source the cpp file
+___
+
+# Call the R-level fibonacci() fn
+___
+```
+
+*** =solution
+```{r}
+# Source the cpp file
+sourceCpp("fibonacci.cpp")
+
+# Call the R-level fibonacci() fn
+fibonacci(20)
+```
+
+*** =sct
+```{r}
+ex() %>% {
+  check_function(., "sourceCpp") %>% {
+    check_arg(., "file") %>% 
+      check_equal()
+  }
+  check_function(., "fibonacci") %>% {
+    check_arg(., "x") %>% 
+      check_equal()
+  }
+}
+```
