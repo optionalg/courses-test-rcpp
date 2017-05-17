@@ -59,6 +59,85 @@ ex() %>% {
 ```
 
 
+
+--- type:NormalExercise lang:r xp:100 skills:1 key:bb6ca8dc4d
+## Demonstrating C++ concepts
+
+In order to work with Rcpp, it is useful to know some C++.  For an introductory exercise that teaches students about asigning diferent types of variable, I'd like a C++ script pane like this.
+
+```{cpp}
+// Define an integer x, equal to 6
+___ x = ___;
+
+// Define a double y, equal to 3.33
+___ y = ___;
+```
+
+The current workaround uses `cppFunction()`, which is less than ideal since there is a lot of code the the student has to ignore, and because their code is being written insdie a string, which makes it hard to debug.
+
+I'm also seeing an error message `Error: Error 1 occurred building shared library.` when calling `cppFunction()` that I've not quite figured out yet.
+
+*** =instructions
+
+You are going to define variables using C++. To make them available in R, they are being wrapped in a call to `cppFunction()`. This will be discussed later in the course, along with other ways of writing C++ code. For now, focus only on the variable assignment.
+
+- Define an integer named `x`, setting the value equal to `6`.
+- Define an double precision floating point number named `y`, setting the value equal to `3.33`.
+
+
+*** =hint
+
+- In C++, integers have type `int`, and double-precision floating point numbers have type `double`.
+
+*** =pre_exercise_code
+```{r}
+library(Rcpp)
+```
+
+*** =sample_code
+```{r}
+cppFunction('
+
+List defineVariables(){
+    // Define an integer x, equal to 6
+    ___ x = ___;
+    
+    // Define a double y, equal to 3.33
+    ___ y = ___;
+    
+    return List::create( 
+        _["x"] = x, _["y"] = y
+    ) ;
+}
+
+')
+defineVariables()
+```
+
+*** =solution
+```{r}
+cppFunction('
+
+List defineVariables(){
+    // Define an integer x, equal to 6
+    int x = 6;
+    
+    // Define a double y, equal to 3.33
+    double y = 3.33;
+    
+    return List::create( 
+        _["x"] = x, _["y"] = y
+    ) ;
+}
+
+')
+defineVariables()
+```
+
+*** =sct
+```{r}
+
+```
 --- type:NormalExercise lang:r xp:100 skills:1 key:d3837f8c96
 ## Using separate R and C++ files 
 
