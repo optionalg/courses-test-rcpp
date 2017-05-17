@@ -49,5 +49,11 @@ evalCpp('6 * 7')
 
 *** =sct
 ```{r}
-
+test_library_function("Rcpp")
+ex() %>% {
+  check_function(., "evalCpp") %>% {
+    check_arg(., "code") %>% 
+      check_equal()
+  }
+}
 ```
