@@ -12,7 +12,9 @@ evalCpp('1 + 1')
 ## [1] 2
 ```
 
-The first time you run this code, there will be a delay of a few seconds while the code compiles. The second time, it should run instantaneously. Ideally, this caching works in Campus!
+The first time you run this code, there will be a delay of a few seconds while the code compiles. The second time, it should run instantaneously. 
+
+I think everything is OK with this exercise.
 
 *** =instructions
 
