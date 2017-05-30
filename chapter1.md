@@ -141,36 +141,40 @@ defineVariables()
 
 ```
 --- type:NormalExercise lang:r xp:100 skills:1 key:d3837f8c96
-## Using separate R and C++ files 
+## Using a C++ file
 
-The typical way to write non-trivial Rcpp code is to have separate R (`.R`) and C++ (`.cpp`) files.  Here's an example C++ function taken from section 1.2.5 of [Seamless R and C++ Integration with Rcpp](https://www.springer.com/us/book/9781461468677).
+A common way to write non-trivial Rcpp code is to write it in a C++ (`.cpp`) file.  By using an Rcpp export tag, `// [[Rcpp::export]]` the function is exported to R. This can then be called from the same file, by using an `/*** R` comment block. The pattern is as follows.
 
 ```{cpp}
 #include <Rcpp.h>
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-int fibonacci(const int x) {
-  if(x < 2) {
-    return x;
-  }
-  else {
-    return(fibonacci(x - 1) + fibonacci(x - 2));
-  }
+double some_function(double x) {
+  //do something here ...
+  return(y)
 }
+
+/*** R
+  # Call the R-level some_function() fn 
+  some_function(123) 
+*/
 ```
 
-Let's step through the code.
+Here's an example C++ function taken from section 1.2.5 of [Seamless R and C++ Integration with Rcpp](https://www.springer.com/us/book/9781461468677).
 
-- `#include <Rcpp.h>` gives the C++ file access to the functionality described in the `Rcpp.h` header file. This includes C++ equivalents of R objects. For example `NumericVector` is the Rcpp equivalent of R's `numeric` vector.
-- `using namespace Rcpp;` means that the code in this file can access the contents of the `Rcpp` namespace without explicitly mentioning it. For example, you can write `NumericVector` rather than `Rcpp::NumericVector`.
-- `// [[Rcpp::export]]` tells Rcpp that the function following it needs to be exported. That is, an R function that calls this C++ function must be created when this file is sourced.
-- `int fibonacci(const int x) { ... }` defines a C++ function that calculates Fibonacci numbers. 
+The trick is that the Submit Answer button should call `sourceCpp()` to run the code.
+``
+
 
 *** =instructions
 
-- Pass `"fibonacci.cpp"` to `sourceCpp()` to source the C++ code.
-- Run the R-level fibonacci function that is generated with 10 as an input.
+- Call `#include <Rcpp.h>` to include the Rcpp header file.
+- Call `using namespace Rcpp;` to access the contents of the `Rcpp` namespace without explicitly mentioning it.
+- Complete the definition of the `fibonacci()` function.
+    - If `x` is less than 2, return `x`.
+    - Otherwise, recursively call `fibonacci()` on `x - 1` and on `x - 2`, then return the sum of the results.
+- Run the R-level `fibonacci()` function that is generated with 20 as an input.
 
 *** =hint
 
@@ -183,30 +187,65 @@ library(Rcpp)
 ```
 
 *** =sample_code
-```{r}
-# Source the cpp file
+```{cpp}
+// Include the Rcpp header file
 ___
 
-# Call the R-level fibonacci() fn
+// Use the Rcpp namespace
 ___
+
+// [[Rcpp::export]]
+int fibonacci(const int x) {
+  // If x is less than 2, return x
+  ___
+  /* 
+  otherwise recursively call fibonacci()
+  on x - 1 and x - 2, then return the sum
+  */
+  ___
+}
+
+/*** R
+  # Call the R-level fibonacci() fn 
+  # to get the 20th fibonacci number
+  ___ 
+*/
 ```
 
 *** =solution
-```{r}
-# Source the cpp file
-sourceCpp("fibonacci.cpp")
+```{cpp}
+// Include the Rcpp header file
+#include <Rcpp.h>
 
-# Call the R-level fibonacci() fn
-fibonacci(20)
+// Use the Rcpp namespace
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+int fibonacci(const int x) {
+  // If x is less than 2, return x
+  if(x < 2) {
+    return x;
+  }
+  /* 
+  otherwise recursively call fibonacci()
+  on x - 1 and x - 2, then return the sum
+  */
+  else {
+    return(fibonacci(x - 1) + fibonacci(x - 2));
+  }
+}
+
+/*** R
+  # Call the R-level fibonacci() fn 
+  # to get the 20th fibonacci number
+  fibonacci(20) 
+*/
 ```
 
 *** =sct
 ```{r}
+# Unclear how to test the C++ code, other than seeing if it compiles.
 ex() %>% {
-  check_function(., "sourceCpp") %>% {
-    check_arg(., "file") %>% 
-      check_equal()
-  }
   check_function(., "fibonacci") %>% {
     check_arg(., "x") %>% 
       check_equal()
