@@ -140,7 +140,7 @@ defineVariables()
 ```{r}
 
 ```
---- type:NormalExercise lang:r xp:100 skills:1 key:d3837f8c96
+--- type:RCppExercise lang:r xp:100 key:d3837f8c96
 ## Using a C++ file
 
 A common way to write non-trivial Rcpp code is to write it in a C++ (`.cpp`) file.  By using an Rcpp export tag, `// [[Rcpp::export]]` the function is exported to R. This can then be called from the same file, by using an `/*** R` comment block. The pattern is as follows.
@@ -166,9 +166,7 @@ Here's an example C++ function taken from section 1.2.5 of [Seamless R and C++ I
 The trick is that the Submit Answer button should call `sourceCpp()` to run the code.
 ``
 
-
 *** =instructions
-
 - Call `#include <Rcpp.h>` to include the Rcpp header file.
 - Call `using namespace Rcpp;` to access the contents of the `Rcpp` namespace without explicitly mentioning it.
 - Complete the definition of the `fibonacci()` function.
