@@ -1,3 +1,3 @@
-# Test course to determine user experience reqs for Rcpp courses
+# Test RCpp
 
 Teach: https://www.datacamp.com/teach/repositories/1154
