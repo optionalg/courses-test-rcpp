@@ -243,10 +243,10 @@ int fibonacci(const int x) {
 *** =sct
 ```{r}
 # Unclear how to test the C++ code, other than seeing if it compiles.
-ex() %>% {
-  check_function(., "fibonacci") %>% {
-    check_arg(., "x") %>% 
-      check_equal()
-  }
-}
+# ex() %>% {
+#  check_function(., "fibonacci") %>% {
+#    check_arg(., "x") %>% 
+#      check_equal()
+#  }
+#}
 ```
