@@ -3,4 +3,4 @@ description      : Demo course to explore user experience for other Rcpp courses
 university       : DataCamp
 difficulty_level : 2
 time_needed      : 1 hour
-from: 'r-base-prod:26'
+from: 'r-base-prod:28'

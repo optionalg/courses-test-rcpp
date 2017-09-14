@@ -243,10 +243,43 @@ int fibonacci(const int x) {
 *** =sct
 ```{r}
 # Unclear how to test the C++ code, other than seeing if it compiles.
-# ex() %>% {
-#  check_function(., "fibonacci") %>% {
-#    check_arg(., "x") %>% 
-#      check_equal()
-#  }
-#}
+parse_rcpp <- function(state) {
+  childState <- ChildState$new(state)
+  childState$student_code <- extract_r_code_from_rcpp(state$student_code)
+  childState$solution_code <- extract_r_code_from_rcpp(state$solution_code)
+  childState$set(
+    student_pd = build_pd(childState$student_code),
+    solution_pd = build_pd(childState$solution_code)
+  )
+  childState
+}
+
+seq_int <- function(lo, hi) {
+  if(hi < lo) return(integer())
+  seq.int(lo, hi, by = 1)
+}
+
+extract_r_code_from_rcpp <- function(code_lines, flatten = TRUE) {
+  start_line <- which(grepl(" */\\*{3} +R", code_lines))
+  end_line <- which(grepl(" *\\*/", code_lines))
+  r_chunks <- Map(seq_int, start_line + 1, end_line - 1) %>% 
+    lapply(function(x) code_lines[x])
+  if(flatten) {
+    r_chunks <- unlist(r_chunks, use.names = FALSE)
+  }
+  r_chunks
+}
+
+build_pd <- function(code) {
+  tryCatch(getParseData(parse(text = code, keep.source = TRUE), includeText = TRUE),
+           error = function(e) return(NULL))
+}
+
+ex() %>% 
+  parse_rcpp() %>% {
+  check_function(., "fibonacci") %>% {
+    check_arg(., "x") %>% 
+      check_equal()
+  }
+}
 ```
